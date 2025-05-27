@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
+import { API_PATH } from '../path/apiPath';
 const StudentEntryPage = () => {
   const { register, handleSubmit, reset } = useForm();
   const [entries, setEntries] = useState([]);
@@ -15,7 +15,7 @@ const StudentEntryPage = () => {
 
   const fetchEntries = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/students/entries');
+      const response = await axios.get(`${API_PATH}/api/students/entries`);
       setEntries(response.data);
     } catch (error) {
       toast.error('Failed to fetch entries');
@@ -40,7 +40,7 @@ const StudentEntryPage = () => {
 
   const handleExit = async (entryId) => {
     try {
-      await axios.put(`http://localhost:5000/api/students/entries/${entryId}/exit`);
+      await axios.put(`${API_PATH}/students/entries/${entryId}/exit`);
       toast.success('Exit recorded successfully');
       fetchEntries();
     } catch (error) {

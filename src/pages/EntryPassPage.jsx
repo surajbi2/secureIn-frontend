@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import moment from 'moment-timezone';
 import 'react-datepicker/dist/react-datepicker.css';
-
+import { API_PATH } from '../path/apiPath';
 // Always parse as UTC and convert to local for display
 const to12HourString = (dateStr) => {
   if (!dateStr) return '';
@@ -31,7 +31,7 @@ const EntryPassPage = () => {
 
   const fetchEvents = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/events');
+      const { data } = await axios.get(`${API_PATH}/api/events`);
       setEvents(data);
     } catch {
       toast.error('Failed to fetch events');

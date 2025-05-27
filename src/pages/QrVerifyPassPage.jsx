@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import moment from 'moment-timezone';
-
+import { API_PATH } from '../path/apiPath';
 const QrVerifyPassPage = () => {
   const { passId } = useParams();
   const [pass, setPass] = useState(null);
@@ -14,7 +14,7 @@ const QrVerifyPassPage = () => {
     const fetchPass = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/passes/verify/${passId}`);
+        const response = await axios.get(`${API_PATH}/api/passes/verify/${passId}`);
         setPass(response.data.pass);
         setError(null);
       } catch (err) {

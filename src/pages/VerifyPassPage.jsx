@@ -3,7 +3,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import moment from 'moment-timezone';
-
+import { API_PATH } from '../path/apiPath'; // Adjust the import based on your project structure
 // Helper function to format dates in IST with consistent format
 const formatDateIST = (date) => {
   if (!date) return '';
@@ -21,7 +21,7 @@ const VerifyPassPage = () => {
 
   const fetchAllPasses = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/passes/active');
+      const response = await axios.get(`${API_PATH}/api/passes/active`);
       setPasses(response.data);
     } catch (err) {
       toast.error('Failed to load passes');
@@ -86,7 +86,7 @@ const VerifyPassPage = () => {
     }
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/passes/verify/${passId}`);
+      const response = await axios.get(`${API_PATH}/api/passes/verify/${passId}`);
       const verifiedPass = {
         ...response.data.pass,
         valid_from_display: formatDateIST(response.data.pass.valid_from),
@@ -107,7 +107,7 @@ const VerifyPassPage = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this pass?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/passes/${id}`);
+      await axios.delete(`${API_PATH}/api/passes/${id}`);
       toast.success('Pass deleted successfully');
       fetchAllPasses();
       if (pass && pass.pass_id === id) {

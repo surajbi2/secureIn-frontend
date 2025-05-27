@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Plus, CalendarCheck, Trash2, Pencil } from 'lucide-react';
-
+import { API_PATH } from '../path/apiPath';
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ const EventsPage = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/events');
+      const response = await axios.get(`${API_PATH}/api/events`);
       setEvents(response.data);
     } catch (error) {
       console.error(error);
@@ -47,10 +47,10 @@ const EventsPage = () => {
 
     try {
       if (selectedEvent) {
-        await axios.put(`http://localhost:5000/api/events/${selectedEvent.id}`, formData);
+        await axios.put(`${API_PATH}/api/events/${selectedEvent.id}`, formData);
         toast.success('Event updated successfully');
       } else {
-        await axios.post('http://localhost:5000/api/events', formData);
+        await axios.post(`${API_PATH}/api/events`, formData);
         toast.success('Event created successfully');
       }
 
@@ -82,7 +82,7 @@ const EventsPage = () => {
     if (!window.confirm('Are you sure you want to delete this event?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/events/${eventId}`);
+      await axios.delete(`${API_PATH}/api/events/${eventId}`);
       toast.success('Event deleted successfully');
       fetchEvents();
     } catch (error) {

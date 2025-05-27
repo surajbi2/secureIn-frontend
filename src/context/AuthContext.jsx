@@ -1,7 +1,7 @@
 import {jwtDecode} from 'jwt-decode';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { API_PATH } from '../path/apiPath';
 const AuthContext = createContext(null);
 
 export const useAuth = () => {
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   const signIn = async (email, password) => {
     try {
       setLoading(true);
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post(`${API_PATH}/api/auth/login`, {
         email,
         password
       });
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
       setLoading(true);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      axios.get('http://localhost:5000/api/auth/verify')
+      axios.get(`${API_PATH}/api/auth/verify`)
         .then(response => {
           setUser(response.data.user);
         })

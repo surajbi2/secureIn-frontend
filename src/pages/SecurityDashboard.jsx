@@ -6,7 +6,7 @@ import axios from 'axios';
 import moment from 'moment';
 import toast from 'react-hot-toast';
 import QRScannerComponent from '../components/QrScanner';
-
+import { API_PATH } from '../path/apiPath';
 const securityItems = [
   {
     title: 'Record Guest Entry',
@@ -39,7 +39,7 @@ const SecurityDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this pass?')) return;
     
     try {
-      await axios.patch(`http://localhost:5000/api/passes/${passId}/soft-delete`);
+      await axios.patch(`${API_PATH}/api/passes/${passId}/soft-delete`);
       setExpiredPasses(current => current.filter(pass => pass.pass_id !== passId));
       toast.success('Pass deleted successfully');
     } catch (error) {
@@ -51,7 +51,7 @@ const SecurityDashboard = () => {
   useEffect(() => {
     const fetchPasses = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/passes/active');
+        const response = await axios.get(`${API_PATH}/api/passes/active`);
         const today = new Date().toISOString().split('T')[0];
         const expired = response.data.filter(pass =>
           pass.status === 'expired' &&

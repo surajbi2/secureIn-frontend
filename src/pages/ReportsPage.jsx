@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Loader2, AlertTriangle, Users, ClipboardList, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+import { API_PATH } from '../path/apiPath';
 const StatCard = ({ icon: Icon, title, value, color }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -27,7 +27,7 @@ const ReportsPage = () => {
     const fetchReports = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/reports');
+        const response = await axios.get(`${API_PATH}/api/reports`);
         setReportsData(response.data);
       } catch (err) {
         setError('Failed to load reports data.');
