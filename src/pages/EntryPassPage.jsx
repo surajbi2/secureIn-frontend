@@ -49,7 +49,7 @@ const EntryPassPage = () => {
         eventId: formValues.eventId ? parseInt(formValues.eventId) : null,
       };
 
-      const response = await axios.post('http://localhost:5000/api/passes', payload);
+      const response = await axios.post(`${API_PATH}/api/passes`, payload);
       setGeneratedPass(response.data.pass);
       toast.success('Entry pass generated successfully');
       reset();
