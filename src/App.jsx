@@ -16,6 +16,7 @@ import EventsPage from './pages/EventsPage'
 import ReportsPage from './pages/ReportsPage'
 import './App.css'
 import QrVerifyPassPage from './pages/QrVerifyPassPage'
+import NotFoundPage from './pages/NotFoundPage'
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
@@ -113,6 +114,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
           <Footer />
