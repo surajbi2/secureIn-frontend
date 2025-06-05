@@ -70,8 +70,8 @@ const SecurityDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-10">
-      <h1 className="text-4xl font-extrabold mb-10 text-center text-gray-900 tracking-tight">
-        🛡️ Security Dashboard
+      <h1 className="md:text-4xl text-2xl font-extrabold mb-10 flex justify-center items-center text-gray-900 tracking-tight">
+        <span className='p-2'><img src="policemen.png" alt="" width={42} height={42} /></span>Security Dashboard
       </h1>
 
       {expiredPasses.length > 0 && (

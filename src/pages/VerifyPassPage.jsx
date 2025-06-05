@@ -120,9 +120,9 @@ const VerifyPassPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="container mx-auto px-4 py-8 max-w-8xl">
       <motion.h1 
-        className="text-4xl font-bold mb-8 text-center text-gray-800"
+        className="text-2xl sm:text-4xl font-bold mb-6 sm:mb-8 text-center text-gray-800"
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -131,7 +131,7 @@ const VerifyPassPage = () => {
       </motion.h1>
 
       <motion.div 
-        className="mb-10 max-w-md mx-auto bg-white p-6 rounded-xl shadow-xl"
+        className="mb-8 sm:mb-10 max-w-md mx-auto bg-white p-4 sm:p-6 rounded-xl shadow-xl"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
@@ -141,46 +141,47 @@ const VerifyPassPage = () => {
           placeholder="Enter Pass ID"
           value={passId}
           onChange={(e) => setPassId(e.target.value.toUpperCase())}
-          className="border border-gray-300 p-3 rounded-lg w-full text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 p-2.5 sm:p-3 rounded-lg w-full text-center text-lg sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           onClick={handleVerify}
           disabled={loading}
-          className="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+          className="mt-3 sm:mt-4 w-full bg-green-600 text-white px-4 py-2 sm:py-2.5 rounded-lg hover:bg-green-700 transition disabled:opacity-50 text-lg sm:text-base"
         >
           {loading ? 'Verifying...' : 'Verify Pass'}
         </button>
-        {error && <p className="text-red-600 font-semibold mt-4 text-center">{error}</p>}
+        {error && <p className="text-red-600 font-semibold mt-3 sm:mt-4 text-center text-lg sm:text-base">{error}</p>}
 
         {pass && (
           <motion.div
-            className="mt-6 border p-4 rounded-lg shadow-md bg-blue-50"
+            className="mt-5 sm:mt-6 border p-3 sm:p-4 rounded-lg shadow-md bg-blue-50"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <p><strong>Pass ID:</strong> {pass.pass_id}</p>
-            <p><strong>Visitor Name:</strong> {pass.visitor_name}</p>
-            <p><strong>Visit Type:</strong> {pass.visit_type}</p>            <p><strong>Purpose:</strong> {pass.purpose}</p>
-            <p><strong>Valid From:</strong> {formatDateIST(pass.valid_from)}</p>
-            <p><strong>Valid Until:</strong> {formatDateIST(pass.valid_until)}</p>
-            <p><strong>Status:</strong> {
-              new Date() > new Date(pass.valid_until) ? 
-                <span className="text-red-500 font-semibold">Expired</span> : 
-                <span className="text-green-600 font-medium">{pass.status}</span>
-            }</p>
+            <div className="space-y-2 text-lg sm:text-base">
+              <p><strong>Pass ID:</strong> {pass.pass_id}</p>
+              <p><strong>Visitor Name:</strong> {pass.visitor_name}</p>
+              <p><strong>Visit Type:</strong> {pass.visit_type}</p>
+              <p><strong>Purpose:</strong> {pass.purpose}</p>
+              <p><strong>Valid From:</strong> {formatDateIST(pass.valid_from)}</p>
+              <p><strong>Valid Until:</strong> {formatDateIST(pass.valid_until)}</p>
+              <p><strong>Status:</strong> {
+                new Date() > new Date(pass.valid_until) ? 
+                  <span className="text-red-500 font-semibold">Expired</span> : 
+                  <span className="text-green-600 font-medium">{pass.status}</span>
+              }</p>
+            </div>
             <button
               onClick={() => handlePrint(pass)}
-              className="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+              className="mt-4 w-full bg-green-600 text-white px-4 py-2 sm:py-2.5 rounded-lg hover:bg-green-700 transition text-lg sm:text-base"
             >
               Print Pass
             </button>
           </motion.div>
         )}
-      </motion.div>
-
-      <motion.h2
-        className="text-2xl font-semibold mb-4 text-gray-700"
+      </motion.div>      <motion.h2
+        className="text-xl sm:text-2xl font-semibold mb-4 text-gray-700"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -188,72 +189,132 @@ const VerifyPassPage = () => {
         All Generated Passes
       </motion.h2>
 
-      <div className="overflow-x-auto mt-6 rounded-xl shadow-lg border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white sticky top-0 z-10">
-            <tr>
-              <th className="px-5 py-3 text-left text-md font-bold uppercase tracking-wider">Pass ID</th>
-              <th className="px-5 py-3 text-left text-md font-bold uppercase tracking-wider">Visitor</th>
-              <th className="px-5 py-3 text-left text-md font-bold uppercase tracking-wider">Type</th>
-              <th className="px-5 py-3 text-left text-md font-bold uppercase tracking-wider">Purpose</th>
-              <th className="px-5 py-3 text-left text-md font-bold uppercase tracking-wider">Valid From</th>
-              <th className="px-5 py-3 text-left text-md font-bold uppercase tracking-wider">Valid Until</th>
-              <th className="px-5 py-3 text-left text-md font-bold uppercase tracking-wider">Status</th>
-              <th className="px-5 py-3 text-center text-md font-bold uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {passes.map((p, index) => (
-              <motion.tr
-                key={p.pass_id}
-                className={`transition duration-200 ease-in-out hover:bg-gray-50 ${
-                  index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                }`}
-                whileHover={{ scale: 1.01 }}
-              >
-                <td className="px-5 py-4 text-md font-medium text-gray-900">{p.pass_id}</td>
-                <td className="px-5 py-4 text-md text-gray-700">{p.visitor_name}</td>
-                <td className="px-5 py-4 text-md text-gray-700">{p.visit_type}</td>
-                <td className="px-5 py-4 text-md text-gray-700">{p.purpose}</td>
-                <td className="px-5 py-4 text-md text-gray-700">
-                  {formatDateIST(p.valid_from)}
-                </td>
-                <td className="px-5 py-4 text-md text-gray-700">
-                  {formatDateIST(p.valid_until)}
-                </td>
-                <td className="px-5 py-4 text-md text-gray-700">
-                  {new Date() > new Date(p.valid_until) ? (
-                    <span className="text-red-500 font-semibold">Expired</span>
-                  ) : (
-                    <span className="text-green-600 font-medium">{p.status}</span>
-                  )}
-                </td>
-                <td className="px-5 py-4 text-center space-y-1">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="bg-white rounded-xl shadow-lg border border-gray-200"
+      >
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white sticky top-0 z-10">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Pass ID</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Visitor</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Type</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Purpose</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Valid From</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Valid Until</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-100">
+              {passes.map((p, index) => (
+                <motion.tr
+                  key={p.pass_id}
+                  className={`transition duration-200 ease-in-out hover:bg-gray-50 ${
+                    index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                  }`}
+                  whileHover={{ scale: 1.005 }}
+                >
+                  <td className="px-4 py-3 text-lg font-medium text-gray-900">{p.pass_id}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">{p.visitor_name}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">{p.visit_type}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">{p.purpose}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">{formatDateIST(p.valid_from)}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">{formatDateIST(p.valid_until)}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">
+                    {new Date() > new Date(p.valid_until) ? (
+                      <span className="text-red-500 font-semibold">Expired</span>
+                    ) : (
+                      <span className="text-green-600 font-medium">{p.status}</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        onClick={() => handlePrint(p)}
+                        className="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-3 py-1.5 rounded-md shadow-sm transition duration-150"
+                      >
+                        Print
+                      </button>
+                      <button
+                        onClick={() => handleDelete(p.pass_id)}
+                        className="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-3 py-1.5 rounded-md shadow-sm transition duration-150"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {passes.map((p) => (
+            <div key={p.pass_id} className="p-4 hover:bg-gray-50 transition">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">Pass ID: {p.pass_id}</h3>
+                  <p className="text-lg text-gray-600 mt-1">{p.visitor_name}</p>
+                </div>
+                <div className="flex gap-2">
                   <button
                     onClick={() => handlePrint(p)}
-                    className="bg-green-500 hover:bg-green-600 text-white text-md font-semibold px-5 py-2 rounded-lg shadow-sm transition duration-150"
+                    className="bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md shadow-sm transition duration-150"
                   >
                     Print
                   </button>
                   <button
                     onClick={() => handleDelete(p.pass_id)}
-                    className="bg-red-500 hover:bg-red-600 text-white text-md font-semibold px-4 py-2 rounded-lg shadow-sm transition duration-150"
+                    className="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md shadow-sm transition duration-150"
                   >
                     Delete
                   </button>
-                </td>
-              </motion.tr>
-            ))}
-            {passes.length === 0 && (
-              <tr>
-                <td colSpan="8" className="text-center text-gray-500 py-6">
-                  No passes found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 text-lg">
+                <div className="flex items-start">
+                  <span className="font-medium text-gray-500 w-24">Type:</span>
+                  <span className="text-gray-700">{p.visit_type}</span>
+                </div>
+                <div className="flex items-start">
+                  <span className="font-medium text-gray-500 w-24">Purpose:</span>
+                  <span className="text-gray-700">{p.purpose}</span>
+                </div>
+                <div className="flex items-start">
+                  <span className="font-medium text-gray-500 w-24">Valid From:</span>
+                  <span className="text-gray-700">{formatDateIST(p.valid_from)}</span>
+                </div>
+                <div className="flex items-start">
+                  <span className="font-medium text-gray-500 w-24">Valid Until:</span>
+                  <span className="text-gray-700">{formatDateIST(p.valid_until)}</span>
+                </div>
+                <div className="flex items-start">
+                  <span className="font-medium text-gray-500 w-24">Status:</span>
+                  <span>
+                    {new Date() > new Date(p.valid_until) ? (
+                      <span className="text-red-500 font-semibold">Expired</span>
+                    ) : (
+                      <span className="text-green-600 font-medium">{p.status}</span>
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+          {passes.length === 0 && (
+            <div className="text-center text-gray-500 py-6">
+              No passes found.
+            </div>
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 };

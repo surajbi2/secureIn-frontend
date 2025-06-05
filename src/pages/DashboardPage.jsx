@@ -47,7 +47,7 @@ const DashboardPage = () => {
 
   return (
     <div className="container mx-auto px-6 py-10">
-      <h1 className="text-4xl font-bold mb-10 text-center text-gray-800">🚪 Admin Dashboard</h1>
+      <h1 className="md:text-4xl text-2xl font-bold mb-10 flex justify-center items-center text-gray-800"><span className='p-2'><img src="admin-panel.png" alt="" width={42} height={42} /></span>Admin Dashboard</h1>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {dashboardItems.map((item, index) => (

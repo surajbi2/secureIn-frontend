@@ -29,7 +29,8 @@ const HeadDashboard = () => {
     <div className="min-h-screen bg-gray-50 py-12 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Head Dashboard</h1>
+           <h1 className="md:text-4xl text-2xl font-extrabold mb-10 flex justify-center items-center text-gray-900 tracking-tight">
+        <span className='p-2'><img src="team.png" alt="" width={42} height={42} /></span>Head Dashboard</h1>
           <p className="text-gray-600 text-md">
             Monitor visitor entries, manage events, and access reports — all in one place.
           </p>

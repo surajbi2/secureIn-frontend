@@ -93,13 +93,13 @@ const EventsPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-            <CalendarCheck className="w-7 h-7 text-blue-500" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
+            <CalendarCheck className="w-6 sm:w-7 h-6 sm:h-7 text-blue-500" />
             Events Management
           </h1>
-          <p className="text-gray-500 mt-1">Manage and organize your department's events.</p>
+          <p className="text-sm sm:text-base text-gray-500 mt-1">Manage and organize your department's events.</p>
         </div>
         <button
           onClick={() => {
@@ -107,10 +107,10 @@ const EventsPage = () => {
             setFormData(initialFormData);
             setShowForm(!showForm);
           }}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
         >
           <Plus className="w-5 h-5" />
-          {showForm ? 'Cancel' : 'Add Event'}
+          <span>{showForm ? 'Cancel' : 'Add Event'}</span>
         </button>
       </div>
 
@@ -124,8 +124,8 @@ const EventsPage = () => {
             {selectedEvent ? 'Edit Event' : 'Create New Event'}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="col-span-1">
                 <label className="block mb-1 text-sm font-medium text-gray-700">Event Name</label>
                 <input
                   type="text"
@@ -133,11 +133,11 @@ const EventsPage = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2"
+                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2.5 sm:p-2 text-sm sm:text-base"
                   placeholder='Enter event name'
                 />
               </div>
-              <div>
+              <div className="col-span-1">
                 <label className="block mb-1 text-sm font-medium text-gray-700">Venue</label>
                 <input
                   type="text"
@@ -145,22 +145,22 @@ const EventsPage = () => {
                   value={formData.venue}
                   onChange={handleInputChange}
                   required
-                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2"
+                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2.5 sm:p-2 text-sm sm:text-base"
                   placeholder='Enter venue'
                 />
               </div>
-              <div className="md:col-span-2">
+              <div className="col-span-1 sm:col-span-2">
                 <label className="block mb-1 text-sm font-medium text-gray-700">Description</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   rows={3}
-                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2"
+                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2.5 sm:p-2 text-sm sm:text-base"
                   placeholder='Enter event description'
                 />
               </div>
-              <div>
+              <div className="col-span-1">
                 <label className="block mb-1 text-sm font-medium text-gray-700">Start Date</label>
                 <input
                   type="date"
@@ -168,10 +168,10 @@ const EventsPage = () => {
                   value={formData.startDate}
                   onChange={handleInputChange}
                   required
-                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2"
+                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2.5 sm:p-2 text-sm sm:text-base"
                 />
               </div>
-              <div>
+              <div className="col-span-1">
                 <label className="block mb-1 text-sm font-medium text-gray-700">End Date</label>
                 <input
                   type="date"
@@ -179,12 +179,12 @@ const EventsPage = () => {
                   value={formData.endDate}
                   onChange={handleInputChange}
                   required
-                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2"
+                  className="w-full border-gray-300 border rounded-md hover:shadow-xl focus:ring-blue-500 focus:border-blue-500 p-2.5 sm:p-2 text-sm sm:text-base"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end gap-4">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 mt-6">
               <button
                 type="button"
                 onClick={() => {
@@ -192,57 +192,90 @@ const EventsPage = () => {
                   setSelectedEvent(null);
                   setFormData(initialFormData);
                 }}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition disabled:opacity-50 text-sm sm:text-base"
               >
                 {loading ? 'Saving...' : selectedEvent ? 'Update' : 'Create'}
               </button>
             </div>
           </form>
         </motion.div>
-      )}
-
-      <motion.div
+      )}      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="bg-white rounded-xl shadow overflow-hidden"
       >
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {['Event Name', 'Venue', 'Date', 'Created By', 'Actions'].map((header) => (
-                <th
-                  key={header}
-                  className={`px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase ${
-                    header === 'Actions' && 'text-right'
-                  }`}
-                >
-                  {header}
-                </th>
+        {/* Large Screen Table */}
+        <div className="hidden md:block">
+          <table className="min-w-full divide-y divide-gray-400">
+            <thead className="bg-gray-50">
+              <tr>
+                {['Event Name', 'Venue', 'Date', 'Created By', 'Actions'].map((header) => (
+                  <th
+                    key={header}
+                    className={`px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase ${
+                      header === 'Actions' && 'text-right'
+                    }`}
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-100">
+              {events.map((event) => (
+                <tr key={event.id} className="hover:bg-gray-50 transition">
+                  <td className="px-6 py-4">
+                    <div className="font-medium text-gray-900">{event.name}</div>
+                    <div className="text-md text-gray-500">{event.description}</div>
+                  </td>
+                  <td className="px-6 py-4 text-md text-gray-600">{event.venue}</td>
+                  <td className="px-6 py-4 text-md text-gray-600">
+                    {new Date(event.start_date).toLocaleDateString()} –{' '}
+                    {new Date(event.end_date).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 text-md text-gray-600">{event.creator_name}</td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex justify-end gap-4">
+                      <button
+                        onClick={() => handleEdit(event)}
+                        className="text-blue-600 hover:text-blue-800"
+                        title="Edit"
+                      >
+                        <Pencil className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(event.id)}
+                        className="text-red-600 hover:text-red-800"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Cards View */}
+        <div className="md:hidden">
+          <div className="divide-y divide-gray-200">
             {events.map((event) => (
-              <tr key={event.id} className="hover:bg-gray-50 transition">
-                <td className="px-6 py-4">
-                  <div className="font-medium text-gray-900">{event.name}</div>
-                  <div className="text-sm text-gray-500">{event.description}</div>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">{event.venue}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">
-                  {new Date(event.start_date).toLocaleDateString()} –{' '}
-                  {new Date(event.end_date).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">{event.creator_name}</td>
-                <td className="px-6 py-4 text-right">
-                  <div className="flex justify-end gap-4">
+              <div key={event.id} className="p-4 hover:bg-gray-50 transition">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">{event.name}</h3>
+                    <p className="text-sm text-gray-500 mt-1">{event.description}</p>
+                  </div>
+                  <div className="flex gap-3">
                     <button
                       onClick={() => handleEdit(event)}
                       className="text-blue-600 hover:text-blue-800"
@@ -258,11 +291,29 @@ const EventsPage = () => {
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
-                </td>
-              </tr>
+                </div>
+                
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-start">
+                    <span className="text-sm font-medium text-gray-500 w-20">Venue:</span>
+                    <span className="text-sm text-gray-600">{event.venue}</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="text-sm font-medium text-gray-500 w-20">Date:</span>
+                    <span className="text-sm text-gray-600">
+                      {new Date(event.start_date).toLocaleDateString()} –{' '}
+                      {new Date(event.end_date).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="text-sm font-medium text-gray-500 w-20">Created By:</span>
+                    <span className="text-sm text-gray-600">{event.creator_name}</span>
+                  </div>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
