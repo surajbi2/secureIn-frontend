@@ -22,7 +22,7 @@ const LoginPage = () => {
         navigate('/dashboard');
       } else if (user.role === 'security') {
         navigate('/security-dashboard');
-      } else if (user.role === 'head') {
+      } else if (user.role === 'staff') {
         navigate('/head-dashboard');
       } else {
         navigate('/dashboard');
