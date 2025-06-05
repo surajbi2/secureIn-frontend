@@ -9,5 +9,10 @@ export default defineConfig({
   ],
   server: {
     host: true, // enables access from mobile
+    historyApiFallback: true // handle client-side routing
+  },
+  preview: {
+    host: true,
+    historyApiFallback: true
   }
 })

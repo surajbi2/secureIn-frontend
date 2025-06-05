@@ -9,7 +9,6 @@ const QrVerifyPassPage = () => {
   const [pass, setPass] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     const fetchPass = async () => {
       try {
@@ -18,8 +17,14 @@ const QrVerifyPassPage = () => {
         setPass(response.data.pass);
         setError(null);
       } catch (err) {
-        const errorMessage = err.response?.data?.message || 'Failed to verify pass';
-        setError(errorMessage);
+        const errorData = err.response?.data;
+        const errorMessage = errorData?.message || 'Failed to verify pass';
+        
+        if (errorData?.code === 'NOT_FOUND') {
+          setError(`Pass ID ${errorData.id}: ${errorMessage}`);
+        } else {
+          setError(errorMessage);
+        }
         toast.error(errorMessage);
       } finally {
         setLoading(false);
@@ -28,13 +33,30 @@ const QrVerifyPassPage = () => {
 
     fetchPass();
   }, [passId]);
-
   if (loading) {
-    return <div className="text-center mt-10">Loading pass verification...</div>;
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-md text-center">
+        <h1 className="text-3xl font-bold mb-6">QR Pass Verification</h1>
+        <div className="animate-pulse text-gray-600">Loading pass verification...</div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center mt-10 text-red-600 font-bold">{error}</div>;
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-md text-center">
+        <h1 className="text-3xl font-bold mb-6">QR Pass Verification</h1>
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="text-red-600 font-bold mb-4">{error}</div>
+          <button
+            onClick={() => window.location.href = '/verify-pass'}
+            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go to Pass Verification
+          </button>
+        </div>
+      </div>
+    );
   }
   const getStatusDisplay = () => {
     if (!pass) return null;
