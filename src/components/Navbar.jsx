@@ -19,7 +19,6 @@ const Navbar = () => {
         { name: 'Verify Pass', to: '/verify-pass' },
         { name: 'Events', to: '/events' },
         { name: 'Reports', to: '/reports' },
-        { name: 'Settings', to: '/settings' }
       ];
     } else if (user?.role === 'security') {
       return [
