@@ -11,6 +11,7 @@ const Navbar = () => {
     signOut();
     navigate('/login');
   };
+  
   const getNavLinks = () => {
     if (user?.role === 'admin') {
       return [

@@ -14,6 +14,9 @@ import EntryPassPage from './pages/EntryPassPage'
 import VerifyPassPage from './pages/VerifyPassPage'
 import EventsPage from './pages/EventsPage'
 import ReportsPage from './pages/ReportsPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TermsOfServicePage from './pages/TermsOfServicePage'
+import ContactUsPage from './pages/ContactUsPage'
 import './App.css'
 import QrVerifyPassPage from './pages/QrVerifyPassPage'
 import NotFoundPage from './pages/NotFoundPage'
@@ -44,6 +47,9 @@ function App() {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+              <Route path="/contact-us" element={<ContactUsPage />} />
               <Route 
                 path="/dashboard" 
                 element={

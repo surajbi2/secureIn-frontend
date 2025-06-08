@@ -8,13 +8,13 @@ import toast from 'react-hot-toast';
 import QRScannerComponent from '../components/QrScanner';
 import { API_PATH } from '../path/apiPath';
 const securityItems = [
-  {
-    title: 'Record Guest Entry',
-    description: 'Enter guest details for seminars, events, and parent visits.',
-    icon: LogIn,
-    color: 'from-blue-500 to-blue-700',
-    path: '/visitor-entry',
-  },
+  // {
+  //   title: 'Record Guest Entry',
+  //   description: 'Enter guest details for seminars, events, and parent visits.',
+  //   icon: LogIn,
+  //   color: 'from-blue-500 to-blue-700',
+  //   path: '/visitor-entry',
+  // },
   {
     title: 'Generate Entry Pass',
     description: 'Create new entry passes for visitors.',
@@ -33,11 +33,11 @@ const securityItems = [
 
 const SecurityDashboard = () => {
   const navigate = useNavigate();
-  const [showScanner, setShowScanner] = useState(false);  const [expiredPasses, setExpiredPasses] = useState([]);
-  
+  const [showScanner, setShowScanner] = useState(false); const [expiredPasses, setExpiredPasses] = useState([]);
+
   const handleDelete = async (passId) => {
     if (!window.confirm('Are you sure you want to delete this pass?')) return;
-    
+
     try {
       await axios.patch(`${API_PATH}/api/passes/${passId}/soft-delete`);
       setExpiredPasses(current => current.filter(pass => pass.pass_id !== passId));
@@ -93,7 +93,7 @@ const SecurityDashboard = () => {
                         Expired at {moment(pass.valid_until).format('hh:mm A')}
                       </p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => handleDelete(pass.pass_id)}
                       className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-full transition-colors"
                       title="Delete pass"

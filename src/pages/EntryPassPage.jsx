@@ -9,11 +9,8 @@ import { API_PATH } from '../path/apiPath';
 // Always parse as UTC and convert to local for display
 const to12HourString = (dateStr) => {
   if (!dateStr) return '';
-  // Parse as UTC, display in local time
-  const m = moment.utc(dateStr).local();
-  const datePart = m.format('YYYY-MM-DD');
-  const timePart = m.format('h:mm A');
-  return `${datePart} ${timePart}`;
+  // Parse time in UTC and convert to IST
+  return moment.utc(dateStr).tz('Asia/Kolkata').format('YYYY-MM-DD h:mm A [IST]');
 };
 
 const EntryPassPage = () => {
@@ -71,39 +68,61 @@ const EntryPassPage = () => {
           .pass-container { max-width:500px; margin:auto; padding:20px; border:2px solid #000; }
           .qr-code, .pass-id, .pass-details { text-align:center; }
           .validity { color:red; font-weight:bold; }
+          .info-container { display: flex; gap: 20px; padding: 0 20px; }
+          .info-section { flex: 1; text-align: left; }
+          .info-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0; }
         </style>
-      </head><body>        <div class="pass-container">
+      </head><body>      
+        <div class="pass-container">
           <div style="text-align: center; margin-bottom: 20px;">
             <img src="/cuk-full-logo.png" alt="CUK Logo" style="height: 80px; margin-bottom: 10px;"/>
-            <h1 style="margin: 5px 0; font-size: 24px;">SecureIn</h1>
-            <h2 style="margin: 5px 0; color: #444;">Visitor Entry Pass</h2>
+            <h1 style="margin: 5px 0; font-size: 20px;">SecureIn</h1>
+            <h3 style="margin: 2px 0; color: #444;">Visitor Entry Pass</h3>
           </div>
           <div class="pass-id">Pass ID: ${p.pass_id}</div>
-          <div class="qr-code"><img src="${p.qr_code}" /></div>          <div class="pass-details">
+          <div class="qr-code"><img src="${p.qr_code}" /></div>         
+          <div class="pass-details">
+            ${p.visit_type === 'parent_visit' ? `
+              <div class="info-container">
+                <div class="info-section">
+                  <h3>Visitor Information</h3>
+                  <p><strong>Visitor Name:</strong> ${p.visitor_name}</p>
+                  <p><strong>Phone Number:</strong> ${p.visitor_phone}</p>
+                  <p><strong>ID Type:</strong> ${p.id_type.replace('_', ' ').toUpperCase()}</p>
+                  <p><strong>ID Number:</strong> ${p.id_number}</p>
+                  <p><strong>Visit Type:</strong> ${p.visit_type.replace('_', ' ').toUpperCase()}</p>
+                  <p><strong>Purpose:</strong> ${p.purpose}</p>
+                </div>
+                <div class="info-section">
+                  <h3>Student Information</h3>
+                  <p><strong>Student Name:</strong> ${p.student_name}</p>
+                  <p><strong>Relation:</strong> ${p.relation_to_student}</p>
+                  <p><strong>Department:</strong> ${p.department}</p>
+                </div>
+              </div>
+            ` : `
+              <div style="text-align: left; padding: 0 20px;">
+                <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 15px;">Visitor Information</h3>
+                <p><strong>Visitor Name:</strong> ${p.visitor_name}</p>
+                <p><strong>Phone Number:</strong> ${p.visitor_phone}</p>
+                <p><strong>ID Type:</strong> ${p.id_type.replace('_', ' ').toUpperCase()}</p>
+                <p><strong>ID Number:</strong> ${p.id_number}</p>
+                <p><strong>Visit Type:</strong> ${p.visit_type.replace('_', ' ').toUpperCase()}</p>
+                <p><strong>Purpose:</strong> ${p.purpose}</p>
+                ${p.event_name ? `
+                  <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0;">Event Details</h3>
+                  <p><strong>Event:</strong> ${p.event_name}</p>
+                ` : ''}
+              </div>
+            `}
             <div style="text-align: left; padding: 0 20px;">
-              <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 15px;">Visitor Information</h3>
-              <p><strong>Visitor Name:</strong> ${p.visitor_name}</p>
-              <p><strong>Phone Number:</strong> ${p.visitor_phone}</p>
-              <p><strong>ID Type:</strong> ${p.id_type.replace('_', ' ').toUpperCase()}</p>
-              <p><strong>ID Number:</strong> ${p.id_number}</p>
-              <p><strong>Visit Type:</strong> ${p.visit_type.replace('_', ' ').toUpperCase()}</p>
-              <p><strong>Purpose:</strong> ${p.purpose}</p>
-              ${p.event_name ? `
-                <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0;">Event Details</h3>
-                <p><strong>Event:</strong> ${p.event_name}</p>
-              ` : ''}
-              ${p.student_name ? `
-                <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0;">Student Information</h3>
-                <p><strong>Student Name:</strong> ${p.student_name}</p>
-                <p><strong>Relation:</strong> ${p.relation_to_student}</p>
-                <p><strong>Department:</strong> ${p.department}</p>
-              ` : ''}
               <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0;">Validity Period</h3>
               <p class="validity">
                 <strong>Valid From:</strong> ${to12HourString(p.valid_from)}<br/>
                 <strong>Valid Until:</strong> ${to12HourString(p.valid_until)}
               </p>
-            </div></div>
+            </div>
+          </div>
           <div style="margin-top: 30px; display: flex; justify-content: space-between; padding: 20px 40px;">
             <div style="text-align: center; flex: 1;">
               <div style="border-top: 1px solid black; margin-top: 50px; padding-top: 5px;">

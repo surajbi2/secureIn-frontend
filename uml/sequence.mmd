@@ -1,0 +1,26 @@
+%%{init: {'theme': 'default', 'themeVariables': { 'background': '#ffffff', 'primaryColor': '#000000', 'primaryTextColor': '#000000', 'secondaryTextColor': '#000000' }}}%%
+
+sequenceDiagram
+    participant Admin as Admin
+    participant Security as Security Staff
+    participant FE as Frontend (React Web App)
+    participant BE as Backend API (Node.js)
+    participant DB as MySQL Database
+
+    Admin->>FE: Create new event
+    FE->>BE: Submit event details
+    BE->>DB: Store event in database
+
+    Security->>FE: Generate entry pass (select event, enter visitor details)
+    FE->>BE: Submit pass generation request
+    BE->>DB: Generate UUID, store pass with event link
+    BE-->>FE: Return QR code with UUID
+    FE-->>Security: Display/download QR-based pass
+
+    Security->>FE: Scan visitor QR code at entry
+    FE->>BE: Send UUID for validation
+    BE->>DB: Verify pass validity and status
+    DB-->>BE: Return pass status
+    BE->>DB: Update pass as 'used'
+    BE-->>FE: Return validation result
+    FE-->>Security: Display "Valid" or "Invalid"

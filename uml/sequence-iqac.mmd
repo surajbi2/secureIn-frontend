@@ -1,0 +1,32 @@
+%%{init: {'theme': 'default', 'themeVariables': { 'background': '#ffffff', 'primaryColor': '#000000', 'primaryTextColor': '#000000', 'secondaryTextColor': '#000000' }}}%%
+
+sequenceDiagram
+    participant User as Regular User
+    participant Admin as Admin
+    participant FE as Frontend (Vue.js App)
+    participant BE as Backend API (Node.js)
+    participant DB as MySQL Database
+
+    User->>FE: Login and upload notice
+    FE->>BE: Send notice details
+    BE->>DB: Save notice as 'pending'
+
+    Admin->>FE: Login and view pending notices
+    FE->>BE: Fetch pending notice list
+    BE->>DB: Query notices with status 'pending'
+    DB-->>BE: Return pending notices
+    BE-->>FE: Display notices for review
+
+    Admin->>FE: Approve or reject notice
+    FE->>BE: Send update request
+    BE->>DB: Update notice status
+
+    Admin->>FE: Upload Minutes of Meeting (MoM)
+    FE->>BE: Submit MoM file and details
+    BE->>DB: Store MoM in database
+
+    User->>FE: View and download approved notices & MoM
+    FE->>BE: Fetch approved content
+    BE->>DB: Return data where status = 'approved'
+    DB-->>BE: Return file info
+    BE-->>FE: Provide downloadable links

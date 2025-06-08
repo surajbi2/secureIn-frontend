@@ -3,14 +3,8 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import moment from 'moment-timezone';
-import { API_PATH } from '../path/apiPath'; // Adjust the import based on your project structure
-// Helper function to format dates in IST with consistent format
-const formatDateIST = (date) => {
-  if (!date) return '';
-  // Always parse as UTC, then convert to IST for display
-  const m = moment.utc(date).tz('Asia/Kolkata');
-  return m.format('MMM D, YYYY, hh:mm A');
-};
+import { API_PATH } from '../path/apiPath';
+import { formatDateTimeIST } from '../utils/dateUtils';
 
 const VerifyPassPage = () => {
   const [passId, setPassId] = useState('');
@@ -31,52 +25,83 @@ const VerifyPassPage = () => {
   useEffect(() => {
     fetchAllPasses();
   }, []);
-
   const handlePrint = (passToPrint) => {
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Entry Pass</title>
-          <style>
-            body { font-family: Arial, sans-serif; }
-            .pass-container { max-width: 500px; margin: auto; padding: 20px; border: 2px solid #000; }
-            .qr-code { text-align: center; margin: 20px 0; }
-            .pass-details { margin-bottom: 20px; }
-            .pass-id { font-size: 24px; font-weight: bold; text-align: center; }
-            .validity { color: red; font-weight: bold; }
-          </style>
-        </head>
-        <body>
-          <div class="pass-container">
-            <h1 style="text-align: center;">Central University of Karnataka</h1>
-            <h2 style="text-align: center;">Visitor Entry Pass</h2>
-            <div class="pass-id">Pass ID: ${passToPrint.pass_id}</div>
-            <div class="qr-code"><img src="${passToPrint.qr_code}" alt="QR Code" /></div>
-            <div class="pass-details">
-              <p><strong>Visitor Name:</strong> ${passToPrint.visitor_name}</p>
-              <p><strong>Visit Type:</strong> ${passToPrint.visit_type}</p>
-              <p><strong>Purpose:</strong> ${passToPrint.purpose}</p>
+    const printHTML = `
+      <html><head><title>Entry Pass</title>
+        <style>
+          body { font-family: Arial, sans-serif; }
+          .pass-container { max-width:500px; margin:auto; padding:20px; border:2px solid #000; }
+          .qr-code, .pass-id, .pass-details { text-align:center; }
+          .validity { color:red; font-weight:bold; }
+          .info-container { display: flex; gap: 20px; padding: 0 20px; }
+          .info-section { flex: 1; text-align: left; }
+          .info-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0; }
+        </style>
+      </head><body>      
+        <div class="pass-container">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="/cuk-full-logo.png" alt="CUK Logo" style="height: 80px; margin-bottom: 10px;"/>
+            <h1 style="margin: 5px 0; font-size: 20px;">SecureIn</h1>
+            <h3 style="margin: 2px 0; color: #444;">Visitor Entry Pass</h3>
+          </div>
+          <div class="pass-id">Pass ID: ${passToPrint.pass_id}</div>
+          <div class="qr-code"><img src="${passToPrint.qr_code}" /></div>         
+          <div class="pass-details">
+            ${passToPrint.visit_type === 'parent_visit' ? `
+              <div class="info-container">
+                <div class="info-section">
+                  <h3>Visitor Information</h3>
+                  <p><strong>Visitor Name:</strong> ${passToPrint.visitor_name}</p>
+                  <p><strong>Visit Type:</strong> ${passToPrint.visit_type.replace('_', ' ').toUpperCase()}</p>
+                  <p><strong>Purpose:</strong> ${passToPrint.purpose}</p>
+                </div>
+                <div class="info-section">
+                  <h3>Student Information</h3>
+                  <p><strong>Student Name:</strong> ${passToPrint.student_name}</p>
+                  <p><strong>Relation:</strong> ${passToPrint.relation_to_student}</p>
+                  <p><strong>Department:</strong> ${passToPrint.department}</p>
+                </div>
+              </div>
+            ` : `
+              <div style="text-align: left; padding: 0 20px;">
+                <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 15px;">Visitor Information</h3>
+                <p><strong>Visitor Name:</strong> ${passToPrint.visitor_name}</p>
+                <p><strong>Visit Type:</strong> ${passToPrint.visit_type.replace('_', ' ').toUpperCase()}</p>
+                <p><strong>Purpose:</strong> ${passToPrint.purpose}</p>
+                ${passToPrint.event_name ? `
+                  <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0;">Event Details</h3>
+                  <p><strong>Event:</strong> ${passToPrint.event_name}</p>
+                ` : ''}
+              </div>
+            `}
+            <div style="text-align: left; padding: 0 20px;">
+              <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0;">Validity Period</h3>
               <p class="validity">
-                <strong>Valid From:</strong> ${formatDateIST(passToPrint.valid_from)} (IST)<br/>
-                <strong>Valid Until:</strong> ${formatDateIST(passToPrint.valid_until)} (IST)
+                <strong>Valid From:</strong> ${formatDateTimeIST(passToPrint.valid_from)}<br/>
+                <strong>Valid Until:</strong> ${formatDateTimeIST(passToPrint.valid_until)}
               </p>
-              ${passToPrint.event_id ? `<p><strong>Event:</strong> ${passToPrint.event_name}</p>` : ''}
-              ${passToPrint.student_name ? `
-                <p><strong>Student Name:</strong> ${passToPrint.student_name}</p>
-                <p><strong>Relation:</strong> ${passToPrint.relation_to_student}</p>
-                <p><strong>Department:</strong> ${passToPrint.department}</p>` : ''}
-            </div>
-            <div style="text-align: center; font-size: 12px;">
-              <p>This pass must be shown at the security gate.</p>
-              <p>Valid only with a photo ID.</p>
             </div>
           </div>
-          <script>window.onload = () => window.print();</script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+          <div style="margin-top: 30px; display: flex; justify-content: space-between; padding: 20px 40px;">
+            <div style="text-align: center; flex: 1;">
+              <div style="border-top: 1px solid black; margin-top: 50px; padding-top: 5px;">
+                <p style="margin: 0;">Visitor's Signature</p>
+              </div>
+            </div>
+            <div style="text-align: center; flex: 1;">
+              <div style="border-top: 1px solid black; margin-top: 50px; padding-top: 5px;">
+                <p style="margin: 0;">Security Officer's Signature</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>window.onload = () => window.print();</script>
+      </body></html>
+    `;
+
+    const w = window.open('', '_blank');
+    w.document.write(printHTML);
+    w.document.close();
   };
 
   const handleVerify = async () => {
@@ -121,7 +146,7 @@ const VerifyPassPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-8xl">
-      <motion.h1 
+      <motion.h1
         className="text-2xl sm:text-4xl font-bold mb-6 sm:mb-8 text-center text-gray-800"
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -130,7 +155,7 @@ const VerifyPassPage = () => {
         Entry Pass Verification & Management
       </motion.h1>
 
-      <motion.div 
+      <motion.div
         className="mb-8 sm:mb-10 max-w-md mx-auto bg-white p-4 sm:p-6 rounded-xl shadow-xl"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -164,12 +189,19 @@ const VerifyPassPage = () => {
               <p><strong>Visitor Name:</strong> {pass.visitor_name}</p>
               <p><strong>Visit Type:</strong> {pass.visit_type}</p>
               <p><strong>Purpose:</strong> {pass.purpose}</p>
-              <p><strong>Valid From:</strong> {formatDateIST(pass.valid_from)}</p>
-              <p><strong>Valid Until:</strong> {formatDateIST(pass.valid_until)}</p>
-              <p><strong>Status:</strong> {
-                new Date() > new Date(pass.valid_until) ? 
-                  <span className="text-red-500 font-semibold">Expired</span> : 
+              <p><strong>Valid From:</strong> {formatDateTimeIST(pass.valid_from)}</p>
+              <p><strong>Valid Until:</strong> {formatDateTimeIST(pass.valid_until)}</p>
+              <p><strong>Pass Status:</strong> {
+                new Date() > new Date(pass.valid_until) ?
+                  <span className="text-red-500 font-semibold">Expired</span> :
                   <span className="text-green-600 font-medium">{pass.status}</span>
+              }</p>
+              <p><strong>Entry Status:</strong> {
+                pass.entry_status ?
+                  <span className={`font-medium ${pass.entry_status === 'entered' ? 'text-blue-600' : 'text-purple-600'}`}>
+                    {pass.entry_status === 'entered' ? 'Inside' : 'Exited'}
+                  </span> :
+                  <span className="text-gray-500">Not yet entered</span>
               }</p>
             </div>
             <button
@@ -203,9 +235,11 @@ const VerifyPassPage = () => {
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Visitor</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Type</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Purpose</th>
-                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Valid From</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Entry Time</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Exit Time</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Valid Until</th>
-                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Entry Status</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Pass Status</th>
                 <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -213,22 +247,37 @@ const VerifyPassPage = () => {
               {passes.map((p, index) => (
                 <motion.tr
                   key={p.pass_id}
-                  className={`transition duration-200 ease-in-out hover:bg-gray-50 ${
-                    index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                  }`}
+                  className={`transition duration-200 ease-in-out hover:bg-gray-50 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                    }`}
                   whileHover={{ scale: 1.005 }}
                 >
                   <td className="px-4 py-3 text-lg font-medium text-gray-900">{p.pass_id}</td>
                   <td className="px-4 py-3 text-lg text-gray-700">{p.visitor_name}</td>
                   <td className="px-4 py-3 text-lg text-gray-700">{p.visit_type}</td>
                   <td className="px-4 py-3 text-lg text-gray-700">{p.purpose}</td>
-                  <td className="px-4 py-3 text-lg text-gray-700">{formatDateIST(p.valid_from)}</td>
-                  <td className="px-4 py-3 text-lg text-gray-700">{formatDateIST(p.valid_until)}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">{p.entry_time ? formatDateTimeIST(p.entry_time) : '-'}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">{p.exit_time ? formatDateTimeIST(p.exit_time) : '-'}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">{formatDateTimeIST(p.valid_until)}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">
+                    {p.entry_status ? (
+                      <span className={`font-medium ${p.entry_status === 'entered' ? 'text-blue-600' : 'text-purple-600'}`}>
+                        {p.entry_status === 'entered' ? 'Inside' : 'Exited'}
+                      </span>
+                    ) : (
+                      <span className="text-gray-500">Not yet entered</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-lg text-gray-700">
                     {new Date() > new Date(p.valid_until) ? (
                       <span className="text-red-500 font-semibold">Expired</span>
                     ) : (
-                      <span className="text-green-600 font-medium">{p.status}</span>
+                      <span className={`font-medium ${p.status === 'active' ? 'text-green-600' :
+                          p.status === 'cancelled' ? 'text-yellow-600' :
+                            p.status === 'deleted' ? 'text-red-600' :
+                              'text-gray-600'
+                        }`}>
+                        {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
+                      </span>
                     )}
                   </td>
                   <td className="px-4 py-3 text-center">
@@ -276,9 +325,7 @@ const VerifyPassPage = () => {
                     Delete
                   </button>
                 </div>
-              </div>
-              
-              <div className="space-y-2 text-lg">
+              </div>                <div className="space-y-2 text-lg">
                 <div className="flex items-start">
                   <span className="font-medium text-gray-500 w-24">Type:</span>
                   <span className="text-gray-700">{p.visit_type}</span>
@@ -288,20 +335,42 @@ const VerifyPassPage = () => {
                   <span className="text-gray-700">{p.purpose}</span>
                 </div>
                 <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-24">Valid From:</span>
-                  <span className="text-gray-700">{formatDateIST(p.valid_from)}</span>
+                  <span className="font-medium text-gray-500 w-24">Entry:</span>
+                  <span className="text-gray-700">{p.entry_time ? formatDateTimeIST(p.entry_time) : 'Not yet entered'}</span>
+                </div>
+                <div className="flex items-start">
+                  <span className="font-medium text-gray-500 w-24">Exit:</span>
+                  <span className="text-gray-700">{p.exit_time ? formatDateTimeIST(p.exit_time) : 'Not yet exited'}</span>
                 </div>
                 <div className="flex items-start">
                   <span className="font-medium text-gray-500 w-24">Valid Until:</span>
-                  <span className="text-gray-700">{formatDateIST(p.valid_until)}</span>
+                  <span className="text-gray-700">{formatDateTimeIST(p.valid_until)}</span>
                 </div>
                 <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-24">Status:</span>
+                  <span className="font-medium text-gray-500 w-24">Entry Status:</span>
+                  <span>
+                    {p.entry_status ? (
+                      <span className={`font-medium ${p.entry_status === 'entered' ? 'text-blue-600' : 'text-purple-600'}`}>
+                        {p.entry_status === 'entered' ? 'Inside' : 'Exited'}
+                      </span>
+                    ) : (
+                      <span className="text-gray-500">Not yet entered</span>
+                    )}
+                  </span>
+                </div>
+                <div className="flex items-start">
+                  <span className="font-medium text-gray-500 w-24">Pass Status:</span>
                   <span>
                     {new Date() > new Date(p.valid_until) ? (
                       <span className="text-red-500 font-semibold">Expired</span>
                     ) : (
-                      <span className="text-green-600 font-medium">{p.status}</span>
+                      <span className={`font-medium ${p.status === 'active' ? 'text-green-600' :
+                          p.status === 'cancelled' ? 'text-yellow-600' :
+                            p.status === 'deleted' ? 'text-red-600' :
+                              'text-gray-600'
+                        }`}>
+                        {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
+                      </span>
                     )}
                   </span>
                 </div>

@@ -1,0 +1,48 @@
+%%{init: {'theme': 'default', 'themeVariables': { 'background': '#ffffff', 'primaryColor': '#000000', 'primaryTextColor': '#000000', 'secondaryTextColor': '#000000' }}}%%
+
+classDiagram
+
+class User {
+  +userId: int
+  +name: string
+  +email: string
+  +password: string
+  +role: string  // 'user' or 'admin'
+  +login(): boolean
+  +uploadNotice()
+  +downloadFile()
+}
+
+class Admin {
+  +createUser(userData)
+  +approveNotice(noticeId)
+  +rejectNotice(noticeId)
+  +uploadMoM()
+}
+
+class Notice {
+  +noticeId: int
+  +title: string
+  +description: string
+  +filePath: string
+  +status: string  // 'pending', 'approved', 'rejected'
+  +createdAt: Date
+}
+
+class MoM {
+  +momId: int
+  +title: string
+  +filePath: string
+  +createdAt: Date
+}
+
+%% Inheritance
+User <|-- Admin
+
+%% Aggregations
+User o-- "1 to Many" Notice : uploads
+Admin o-- "1 to Many" MoM : uploads
+Admin o-- "1 to Many" User : creates
+
+
+

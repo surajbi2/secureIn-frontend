@@ -1,0 +1,95 @@
+%%{init: {'theme': 'default', 'themeVariables': { 'background': '#ffffff', 'primaryColor': '#000000', 'primaryTextColor': '#000000', 'secondaryTextColor': '#000000' }}}%%
+
+classDiagram
+
+class User {
+    +id: int
+    +name: string
+    +email: string
+    +password: string
+    +role: string
+    +login()
+    +logout()
+    +verifyToken()
+}
+
+class EntryPass {
+    +pass_id: string
+    +visitor_name: string
+    +visitor_phone: string
+    +visit_type: string
+    +id_type: string
+    +id_number: string
+    +purpose: string
+    +valid_from: DateTime
+    +valid_until: DateTime
+    +status: string
+    +qr_code: string
+    +generateQR()
+    +verify()
+    +recordEntry()
+    +recordExit()
+}
+
+class Event {
+    +id: int
+    +name: string
+    +description: string
+    +venue: string
+    +start_date: DateTime
+    +end_date: DateTime
+    +created_by: int
+    +createEvent()
+    +updateEvent()
+    +deleteEvent()
+}
+
+class Admin {
+    +createUser()
+    +generatePass()
+    +manageEvents()
+    +viewReports()
+}
+
+class SecurityGuard {
+    +verifyPass()
+    +recordEntry()
+    +recordExit()
+    +viewActiveEntries()
+}
+
+class Head {
+    +viewReports()
+    +manageEvents()
+}
+
+class Report {
+    +generateVisitorReport()
+    +generateEventReport()
+    +generatePassReport()
+}
+
+%% Inheritance
+User <|-- Admin
+User <|-- SecurityGuard
+User <|-- Head
+
+%% Associations
+Admin "1" -- "Many" EntryPass : generates
+SecurityGuard "1" -- "*" EntryPass : verifies
+Admin "1" -- "Many" Event : manages
+Head "1" -- "Many" Event : oversees
+Event "1" -- "Many" EntryPass : associated_with
+Report "Many" -- "1" Admin : generates_for
+Report "Many" -- "1" Head : views
+
+%% Class Diagram Explanation:
+%% This diagram represents the SecureIn visitor management system for CUK.
+%% - User is the base class with three specialized roles: Admin, SecurityGuard, and Head
+%% - EntryPass manages visitor access with QR-based verification
+%% - Event handles university events that may require visitor passes
+%% - Report generates various analytics and summaries
+%% The system follows a role-based access control where:
+%% - Admins have full system access
+%% - Security Guards handle pass verification and entry/exit
+%% - Heads can view reports and manage department events
