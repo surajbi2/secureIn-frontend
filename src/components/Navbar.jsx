@@ -50,11 +50,11 @@ const Navbar = () => {
           <Link to="/" className="text-white text-xl font-bold tracking-tight">
             🔐 SecureIn - CUK
           </Link>
-
           {user && (
             <>
               {/* Desktop Menu */}
               <div className="hidden md:flex space-x-4 items-center">
+                
                 {navLinks.map((link) => (
                   <Link key={link.name} to={link.to} className={linkClass}>
                     {link.name}

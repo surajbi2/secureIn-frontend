@@ -5,8 +5,10 @@ import { motion } from 'framer-motion';
 import moment from 'moment-timezone';
 import { API_PATH } from '../path/apiPath';
 import { formatDateTimeIST } from '../utils/dateUtils';
+import { useAuth } from '../context/AuthContext';
 
 const VerifyPassPage = () => {
+  const { user } = useAuth();
   const [passId, setPassId] = useState('');
   const [pass, setPass] = useState(null);
   const [passes, setPasses] = useState([]);
@@ -88,7 +90,7 @@ const VerifyPassPage = () => {
                 <p style="margin: 0;">Visitor's Signature</p>
               </div>
             </div>
-            <div style="text-align: center; flex: 1;">
+            <div style="text-align: center, flex: 1;">
               <div style="border-top: 1px solid black; margin-top: 50px; padding-top: 5px;">
                 <p style="margin: 0;">Security Officer's Signature</p>
               </div>
@@ -191,6 +193,7 @@ const VerifyPassPage = () => {
               <p><strong>Purpose:</strong> {pass.purpose}</p>
               <p><strong>Valid From:</strong> {formatDateTimeIST(pass.valid_from)}</p>
               <p><strong>Valid Until:</strong> {formatDateTimeIST(pass.valid_until)}</p>
+              <p><strong>Created By:</strong> {pass.creator_name} ({pass.creator_role})</p>
               <p><strong>Pass Status:</strong> {
                 new Date() > new Date(pass.valid_until) ?
                   <span className="text-red-500 font-semibold">Expired</span> :
@@ -230,11 +233,11 @@ const VerifyPassPage = () => {
         <div className="hidden md:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white sticky top-0 z-10">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Pass ID</th>
+              <tr>                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Pass ID</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Visitor</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Type</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Purpose</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Created By</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Entry Time</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Exit Time</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Valid Until</th>
@@ -250,11 +253,11 @@ const VerifyPassPage = () => {
                   className={`transition duration-200 ease-in-out hover:bg-gray-50 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                     }`}
                   whileHover={{ scale: 1.005 }}
-                >
-                  <td className="px-4 py-3 text-lg font-medium text-gray-900">{p.pass_id}</td>
+                >                  <td className="px-4 py-3 text-lg font-medium text-gray-900">{p.pass_id}</td>
                   <td className="px-4 py-3 text-lg text-gray-700">{p.visitor_name}</td>
                   <td className="px-4 py-3 text-lg text-gray-700">{p.visit_type}</td>
                   <td className="px-4 py-3 text-lg text-gray-700">{p.purpose}</td>
+                  <td className="px-4 py-3 text-lg text-gray-700">{p.creator_name} ({p.creator_role})</td>
                   <td className="px-4 py-3 text-lg text-gray-700">{p.entry_time ? formatDateTimeIST(p.entry_time) : '-'}</td>
                   <td className="px-4 py-3 text-lg text-gray-700">{p.exit_time ? formatDateTimeIST(p.exit_time) : '-'}</td>
                   <td className="px-4 py-3 text-lg text-gray-700">{formatDateTimeIST(p.valid_until)}</td>
@@ -288,12 +291,14 @@ const VerifyPassPage = () => {
                       >
                         Print
                       </button>
-                      <button
-                        onClick={() => handleDelete(p.pass_id)}
-                        className="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-3 py-1.5 rounded-md shadow-sm transition duration-150"
-                      >
-                        Delete
-                      </button>
+                      {user?.role === 'admin' && (
+                        <button
+                          onClick={() => handleDelete(p.pass_id)}
+                          className="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-3 py-1.5 rounded-md shadow-sm transition duration-150"
+                        >
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </td>
                 </motion.tr>
@@ -318,21 +323,26 @@ const VerifyPassPage = () => {
                   >
                     Print
                   </button>
-                  <button
-                    onClick={() => handleDelete(p.pass_id)}
-                    className="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md shadow-sm transition duration-150"
-                  >
-                    Delete
-                  </button>
+                  {user?.role === 'admin' && (
+                    <button
+                      onClick={() => handleDelete(p.pass_id)}
+                      className="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md shadow-sm transition duration-150"
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
-              </div>                <div className="space-y-2 text-lg">
-                <div className="flex items-start">
+              </div>                <div className="space-y-2 text-lg">                <div className="flex items-start">
                   <span className="font-medium text-gray-500 w-24">Type:</span>
                   <span className="text-gray-700">{p.visit_type}</span>
                 </div>
                 <div className="flex items-start">
                   <span className="font-medium text-gray-500 w-24">Purpose:</span>
                   <span className="text-gray-700">{p.purpose}</span>
+                </div>
+                <div className="flex items-start">
+                  <span className="font-medium text-gray-500 w-24">Created By:</span>
+                  <span className="text-gray-700">{p.creator_name} ({p.creator_role})</span>
                 </div>
                 <div className="flex items-start">
                   <span className="font-medium text-gray-500 w-24">Entry:</span>

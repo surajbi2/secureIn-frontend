@@ -1,7 +1,8 @@
 import React from 'react';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+import Button from '../components/Back.jsx';
+import { Link } from 'react-router-dom';
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -10,6 +11,9 @@ const fadeInUp = {
 const ContactUsPage = () => {
   return (
     <div className="container mx-auto px-4 py-12 max-w-6xl">
+        <Link to="/">
+        <Button/>
+        </Link>
       <motion.h1
         className="text-4xl font-bold mb-12 text-center text-blue-700"
         initial="hidden"
@@ -48,8 +52,7 @@ const ContactUsPage = () => {
                 <Phone className="text-blue-600 w-6 h-6 mt-1" />
                 <div>
                   <h3 className="font-medium text-gray-800">Phone</h3>
-                  <p className="text-gray-600">+91 8477-226-728</p>
-                  <p className="text-gray-600">+91 8477-226-729</p>
+                  <p className="text-gray-600">+91 12345-67890</p>
                 </div>
               </div>
             </div>

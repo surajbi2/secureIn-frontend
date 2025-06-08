@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
+import Button from '../components/Back.jsx';
+import { Link } from 'react-router-dom';
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: (i) => ({
@@ -82,7 +83,11 @@ const TermsOfServicePage = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
+    
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <Link to="/" className='mb-6 inline-block'>
+        <Button/>
+        </Link>
       <motion.h1
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}

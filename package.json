@@ -35,6 +35,7 @@
     "react-hook-form": "^7.56.3",
     "react-hot-toast": "^2.5.2",
     "react-router-dom": "^7.6.0",
+    "styled-components": "^6.1.18",
     "tailwindcss": "^4.1.6",
     "uuid": "^11.1.0"
   },
