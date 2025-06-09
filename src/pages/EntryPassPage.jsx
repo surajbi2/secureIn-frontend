@@ -64,75 +64,71 @@ const EntryPassPage = () => {
     const printHTML = `
       <html><head><title>Entry Pass</title>
         <style>
-          body { font-family: Arial, sans-serif; }
-          .pass-container { max-width:500px; margin:auto; padding:20px; border:2px solid #000; }
-          .qr-code, .pass-id, .pass-details { text-align:center; }
-          .validity { color:red; font-weight:bold; }
-          .info-container { display: flex; gap: 20px; padding: 0 20px; }
-          .info-section { flex: 1; text-align: left; }
-          .info-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0; }
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+          .pass-container { max-width: 450px; margin: auto; padding: 15px; border: 2px solid #000; }
+          .header { text-align: center; margin-bottom: 15px; }
+          .header img { height: 60px; margin-bottom: 5px; }
+          .header h1 { margin: 5px 0; font-size: 18px; }
+          .header h3 { margin: 2px 0; color: #444; font-size: 16px; }
+          .pass-details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0; }
+          .qr-section { grid-column: 2; grid-row: 1 / span 2; justify-self: center; }
+          .info-section { grid-column: 1; padding: 0 10px; }
+          .pass-id { font-size: 16px; font-weight: bold; grid-column: 1; }
+          .validity { color: #d00; font-weight: bold; margin-top: 10px; }
+          .signatures { display: flex; justify-content: space-between; margin-top: 20px; }
+          .signature { text-align: center; flex: 1; }
+          .signature-line { border-top: 1px solid black; margin-top: 40px; width: 80%; margin-left: auto; margin-right: auto; }
+          h3 { font-size: 15px; border-bottom: 1px solid #ccc; padding-bottom: 3px; margin: 10px 0; }
+          p { margin: 5px 0; font-size: 14px; }
+          strong { display: inline-block; min-width: 100px; }
         </style>
       </head><body>      
         <div class="pass-container">
-          <div style="text-align: center; margin-bottom: 20px;">
-            <img src="/cuk-full-logo.png" alt="CUK Logo" style="height: 80px; margin-bottom: 10px;"/>
-            <h1 style="margin: 5px 0; font-size: 20px;">SecureIn</h1>
-            <h3 style="margin: 2px 0; color: #444;">Visitor Entry Pass</h3>
+          <div class="header">
+            <img src="/cuk-full-logo.png" alt="CUK Logo"/>
+            <h1>SecureIn</h1>
+            <h3>Visitor Entry Pass</h3>
           </div>
-          <div class="pass-id">Pass ID: ${p.pass_id}</div>
-          <div class="qr-code"><img src="${p.qr_code}" /></div>         
+          
           <div class="pass-details">
-            ${p.visit_type === 'parent_visit' ? `
-              <div class="info-container">
-                <div class="info-section">
-                  <h3>Visitor Information</h3>
-                  <p><strong>Visitor Name:</strong> ${p.visitor_name}</p>
-                  <p><strong>Phone Number:</strong> ${p.visitor_phone}</p>
-                  <p><strong>ID Type:</strong> ${p.id_type.replace('_', ' ').toUpperCase()}</p>
-                  <p><strong>ID Number:</strong> ${p.id_number}</p>
-                  <p><strong>Visit Type:</strong> ${p.visit_type.replace('_', ' ').toUpperCase()}</p>
-                  <p><strong>Purpose:</strong> ${p.purpose}</p>
-                </div>
-                <div class="info-section">
-                  <h3>Student Information</h3>
-                  <p><strong>Student Name:</strong> ${p.student_name}</p>
-                  <p><strong>Relation:</strong> ${p.relation_to_student}</p>
-                  <p><strong>Department:</strong> ${p.department}</p>
-                </div>
+            <div class="pass-id">Pass ID: ${p.pass_id}</div>
+            <div class="qr-section">
+              <img src="${p.qr_code}" style="width: 120px; height: 120px;"/>
+            </div>
+            
+            <div class="info-section">
+              <h3>Visitor Information</h3>
+              <p><strong>Name:</strong> ${p.visitor_name}</p>
+              <p><strong>Phone:</strong> ${p.visitor_phone}</p>
+              <p><strong>ID Type:</strong> ${p.id_type.replace('_', ' ').toUpperCase()}</p>
+              <p><strong>ID Number:</strong> ${p.id_number}</p>
+              <p><strong>Visit Type:</strong> ${p.visit_type.replace('_', ' ').toUpperCase()}</p>
+              <p><strong>Purpose:</strong> ${p.purpose}</p>
+              ${p.visit_type === 'parent_visit' ? `
+                <h3>Student Details</h3>
+                <p><strong>Name:</strong> ${p.student_name}</p>
+                <p><strong>Relation:</strong> ${p.relation_to_student}</p>
+                <p><strong>Department:</strong> ${p.department}</p>
+              ` : ''}
+              ${p.event_name ? `
+                <h3>Event Details</h3>
+                <p><strong>Event:</strong> ${p.event_name}</p>
+              ` : ''}
+              <div class="validity">
+                <p><strong>Valid From:</strong> ${to12HourString(p.valid_from)}</p>
+                <p><strong>Valid Until:</strong> ${to12HourString(p.valid_until)}</p>
               </div>
-            ` : `
-              <div style="text-align: left; padding: 0 20px;">
-                <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 15px;">Visitor Information</h3>
-                <p><strong>Visitor Name:</strong> ${p.visitor_name}</p>
-                <p><strong>Phone Number:</strong> ${p.visitor_phone}</p>
-                <p><strong>ID Type:</strong> ${p.id_type.replace('_', ' ').toUpperCase()}</p>
-                <p><strong>ID Number:</strong> ${p.id_number}</p>
-                <p><strong>Visit Type:</strong> ${p.visit_type.replace('_', ' ').toUpperCase()}</p>
-                <p><strong>Purpose:</strong> ${p.purpose}</p>
-                ${p.event_name ? `
-                  <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0;">Event Details</h3>
-                  <p><strong>Event:</strong> ${p.event_name}</p>
-                ` : ''}
-              </div>
-            `}
-            <div style="text-align: left; padding: 0 20px;">
-              <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin: 15px 0;">Validity Period</h3>
-              <p class="validity">
-                <strong>Valid From:</strong> ${to12HourString(p.valid_from)}<br/>
-                <strong>Valid Until:</strong> ${to12HourString(p.valid_until)}
-              </p>
             </div>
           </div>
-          <div style="margin-top: 30px; display: flex; justify-content: space-between; padding: 20px 40px;">
-            <div style="text-align: center; flex: 1;">
-              <div style="border-top: 1px solid black; margin-top: 50px; padding-top: 5px;">
-                <p style="margin: 0;">Visitor's Signature</p>
-              </div>
+
+          <div class="signatures">
+            <div class="signature">
+              <div class="signature-line"></div>
+              <p>Visitor's Signature</p>
             </div>
-            <div style="text-align: center; flex: 1;">
-              <div style="border-top: 1px solid black; margin-top: 50px; padding-top: 5px;">
-                <p style="margin: 0;">Security Officer's Signature</p>
-              </div>
+            <div class="signature">
+              <div class="signature-line"></div>
+              <p>Security Officer's Signature</p>
             </div>
           </div>
         </div>
